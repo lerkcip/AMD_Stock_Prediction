@@ -1,0 +1,75 @@
+=== Reddit Sentiment Analysis Model Summary ===
+
+1. Feature Importance
+------------------------------
+16. selftext_compound_median: 0.1016
+32. selftext_compound_std: 0.0815
+11. post_score_log: 0.0784
+13. ma20: 0.0518
+6. comment_count: 0.0518
+7. body_compound_mean: 0.0471
+24. post_upvote_ratio_mean: 0.0426
+8. post_count: 0.0385
+29. post_upvote_ratio_median: 0.0348
+15. comment_score_median: 0.0313
+
+2. Model Performance
+------------------------------
+RandomForest:
+  Accuracy: 0.9398
+  Balanced Accuracy: 0.8408
+  Macro F1: 0.8833
+
+XGBoost:
+  Accuracy: 0.9639
+  Balanced Accuracy: 0.8583
+  Macro F1: 0.9000
+
+
+3. Optimal Feature Sets
+------------------------------
+Optimal RandomForest features (20):
+  1. selftext_compound_median
+  2. selftext_compound_std
+  3. post_score_log
+  4. ma20
+  5. comment_count
+  6. body_compound_mean
+  7. post_upvote_ratio_mean
+  8. post_count
+  9. post_upvote_ratio_median
+  10. comment_score_median
+  11. comment_score_log
+  12. post_comments_mean
+  13. ma5
+  14. title_compound_median
+  15. selftext_compound_mean
+  16. post_comments_median
+  17. ma10
+  18. engagement_ratio
+  19. post_score_std
+  20. post_comments_std
+
+Optimal XGBoost features (22):
+  1. selftext_compound_median
+  2. selftext_compound_std
+  3. post_score_log
+  4. ma20
+  5. comment_count
+  6. body_compound_mean
+  7. post_upvote_ratio_mean
+  8. post_count
+  9. post_upvote_ratio_median
+  10. comment_score_median
+  11. comment_score_log
+  12. post_comments_mean
+  13. ma5
+  14. title_compound_median
+  15. selftext_compound_mean
+  16. post_comments_median
+  17. ma10
+  18. engagement_ratio
+  19. post_score_std
+  20. post_comments_std
+  21. post_score_median
+  22. title_compound_mean

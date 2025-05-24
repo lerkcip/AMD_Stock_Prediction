@@ -1,0 +1,46 @@
+# Reddit Data Analysis Configuration
+
+# Data file paths
+data_paths:
+  posts:
+    AMD: "data/AMD_posts.parquet"
+    StockMarket: "data/StockMarket_posts.parquet"
+  comments:
+    AMD: "data/AMD_comments.parquet"
+    StockMarket: "data/StockMarket_comments.parquet"
+
+# Join configuration
+join_keys:
+  posts_to_comments:
+    left_key: "id"
+    right_key: "link_id"
+    right_transform: "lambda x: x.str.replace('t3_', '')"
+
+# Aggregation rules for sentiment analysis
+aggregation_rules:
+  daily_sentiment:
+    group_by: ["date"]
+    metrics:
+      - name: "compound_sentiment_mean"
+        column: "compound_sentiment"
+        function: "mean"
+      - name: "compound_sentiment_std"
+        column: "compound_sentiment"
+        function: "std"
+      - name: "compound_sentiment_count"
+        column: "compound_sentiment"
+        function: "count"
+  
+  # Aggregation by post
+  post_sentiment:
+    group_by: ["id_post", "title"]
+    metrics:
+      - name: "compound_sentiment_mean"
+        column: "compound_sentiment"
+        function: "mean"
+      - name: "compound_sentiment_std"
+        column: "compound_sentiment"
+        function: "std"
+      - name: "comment_count"
+        column: "id_comment"
+        function: "count"
