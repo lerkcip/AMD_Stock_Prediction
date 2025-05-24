@@ -42,68 +42,99 @@ def fetch_reddit_data(subreddits=['AMD_Stock', 'StockMarket', 'stocks', 'investi
     """
     Fetch recent Reddit posts and comments related to AMD
     """
-    # Initialize Reddit API client
-    reddit = praw.Reddit(
-        client_id=os.environ.get('REDDIT_CLIENT_ID'),
-        client_secret=os.environ.get('REDDIT_CLIENT_SECRET'),
-        user_agent=os.environ.get('REDDIT_USER_AGENT', 'python:amd_stock_prediction:v1.0')
-    )
-    
-    # Get today's date
-    today = datetime.now()
-    since_date = today - timedelta(days=days_back)
-    
-    all_posts = []
-    all_comments = []
-    
-    # For each subreddit, get posts
-    for subreddit_name in subreddits:
-        subreddit = reddit.subreddit(subreddit_name)
+    try:
+        # Check if environment variables are set
+        client_id = os.environ.get('REDDIT_CLIENT_ID')
+        client_secret = os.environ.get('REDDIT_CLIENT_SECRET')
+        user_agent = os.environ.get('REDDIT_USER_AGENT', 'python:amd_stock_prediction:v1.0')
         
-        # Get posts
-        for post in subreddit.new(limit=limit):
-            created_time = datetime.fromtimestamp(post.created_utc)
-            if created_time >= since_date:
-                # Check if post is related to AMD
-                title_lower = post.title.lower()
-                selftext_lower = post.selftext.lower()
-                if 'amd' in title_lower or 'amd' in selftext_lower:
-                    post_data = {
-                        'id': post.id,
-                        'title': post.title,
-                        'selftext': post.selftext,
-                        'score': post.score,
-                        'upvote_ratio': post.upvote_ratio,
-                        'num_comments': post.num_comments,
-                        'created_utc': post.created_utc,
-                        'subreddit': subreddit_name
-                    }
-                    all_posts.append(post_data)
-                    
-                    # Get comments for this post
-                    post.comments.replace_more(limit=0)
-                    for comment in post.comments.list():
-                        comment_data = {
-                            'id': comment.id,
-                            'body': comment.body,
-                            'score': comment.score,
-                            'created_utc': comment.created_utc,
-                            'post_id': post.id,
-                            'subreddit': subreddit_name
-                        }
-                        all_comments.append(comment_data)
+        if not client_id or not client_secret:
+            print("Reddit API credentials not found. Skipping Reddit data collection.")
+            return pd.DataFrame(), pd.DataFrame()
+        
+        # Initialize Reddit API client
+        print(f"Initializing Reddit API client with credentials...")
+        reddit = praw.Reddit(
+            client_id=client_id,
+            client_secret=client_secret,
+            user_agent=user_agent
+        )
+        
+        # Get today's date
+        today = datetime.now()
+        since_date = today - timedelta(days=days_back)
+        
+        all_posts = []
+        all_comments = []
+        
+        # For each subreddit, get posts
+        for subreddit_name in subreddits:
+            try:
+                print(f"Fetching data from r/{subreddit_name}...")
+                subreddit = reddit.subreddit(subreddit_name)
+                
+                # Get posts
+                for post in subreddit.new(limit=limit):
+                    try:
+                        created_time = datetime.fromtimestamp(post.created_utc)
+                        if created_time >= since_date:
+                            # Check if post is related to AMD
+                            title_lower = post.title.lower()
+                            selftext_lower = post.selftext.lower()
+                            if 'amd' in title_lower or 'amd' in selftext_lower:
+                                post_data = {
+                                    'id': post.id,
+                                    'title': post.title,
+                                    'selftext': post.selftext,
+                                    'score': post.score,
+                                    'upvote_ratio': post.upvote_ratio,
+                                    'num_comments': post.num_comments,
+                                    'created_utc': post.created_utc,
+                                    'subreddit': subreddit_name
+                                }
+                                all_posts.append(post_data)
+                                
+                                try:
+                                    # Get comments for this post
+                                    post.comments.replace_more(limit=0)
+                                    for comment in post.comments.list():
+                                        try:
+                                            comment_data = {
+                                                'id': comment.id,
+                                                'body': comment.body,
+                                                'score': comment.score,
+                                                'created_utc': comment.created_utc,
+                                                'post_id': post.id,
+                                                'subreddit': subreddit_name
+                                            }
+                                            all_comments.append(comment_data)
+                                        except Exception as e:
+                                            print(f"Error processing comment: {str(e)}")
+                                            continue
+                                except Exception as e:
+                                    print(f"Error fetching comments: {str(e)}")
+                    except Exception as e:
+                        print(f"Error processing post: {str(e)}")
+                        continue
+            except Exception as e:
+                print(f"Error accessing subreddit {subreddit_name}: {str(e)}")
+                continue
     
-    # Convert to DataFrames
-    posts_df = pd.DataFrame(all_posts)
-    comments_df = pd.DataFrame(all_comments)
-    
-    # Add date column
-    if not posts_df.empty:
-        posts_df['date'] = pd.to_datetime(posts_df['created_utc'], unit='s').dt.date
-    if not comments_df.empty:
-        comments_df['date'] = pd.to_datetime(comments_df['created_utc'], unit='s').dt.date
-    
-    return posts_df, comments_df
+        # Convert to DataFrames
+        posts_df = pd.DataFrame(all_posts)
+        comments_df = pd.DataFrame(all_comments)
+        
+        # Add date column
+        if not posts_df.empty:
+            posts_df['date'] = pd.to_datetime(posts_df['created_utc'], unit='s').dt.date
+        if not comments_df.empty:
+            comments_df['date'] = pd.to_datetime(comments_df['created_utc'], unit='s').dt.date
+        
+        print(f"Fetched {len(posts_df)} posts and {len(comments_df)} comments related to AMD")
+        return posts_df, comments_df
+    except Exception as e:
+        print(f"Error in fetch_reddit_data: {str(e)}")
+        return pd.DataFrame(), pd.DataFrame()
 
 def fetch_stock_data(ticker='AMD', days=90):
     """
