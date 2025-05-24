@@ -15,7 +15,7 @@ sys.path.append('..')
 import data_utils
 
 def fetch_reddit_data(subreddits=['AMD_Stock', 'StockMarket', 'stocks', 'investing'], 
-                      days_back=1, limit=100):
+                      days_back=0.25, limit=100):  # 0.25 days = 6 hours
     """
     Fetch recent Reddit posts and comments related to AMD
     """
