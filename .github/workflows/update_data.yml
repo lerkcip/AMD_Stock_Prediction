@@ -1,40 +1,40 @@
-name: Update Data Every 6 Hours
+# name: Update Data Every 6 Hours
 
-on:
-  schedule:
-    - cron: '0 0,6,12,18 * * *'  # Runs at 00:00, 06:00, 12:00, and 18:00 UTC
-  workflow_dispatch:      # Allows manual triggering
+# on:
+#   schedule:
+#     - cron: '0 0,6,12,18 * * *'  # Runs at 00:00, 06:00, 12:00, and 18:00 UTC
+#   workflow_dispatch:      # Allows manual triggering
 
-jobs:
-  update-data:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+# jobs:
+#   update-data:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0
       
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: '3.9'
       
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install praw pandas scikit-learn xgboost yfinance nltk
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+#           pip install praw pandas scikit-learn xgboost yfinance nltk
       
-      - name: Run data collection script
-        run: python scripts/update_data.py
-        env:
-          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
-          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
-          REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
+#       - name: Run data collection script
+#         run: python scripts/update_data.py
+#         env:
+#           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+#           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+#           REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
       
-      - name: Commit and push if changed
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add data/
-          git commit -m "Update data $(date +'%Y-%m-%d %H:%M:%S')" || exit 0
-          git push
+#       - name: Commit and push if changed
+#         run: |
+#           git config --global user.email "github-actions@github.com"
+#           git config --global user.name "GitHub Actions"
+#           git add data/
+#           git commit -m "Update data $(date +'%Y-%m-%d %H:%M:%S')" || exit 0
+#           git push
