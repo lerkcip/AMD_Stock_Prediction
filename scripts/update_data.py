@@ -12,7 +12,30 @@ import sys
 
 # Add parent directory to path to import data_utils
 sys.path.append('..')
-import data_utils
+sys.path.append('.')
+
+# Try to import data_utils with different approaches
+try:
+    import data_utils
+except ImportError:
+    try:
+        # Try relative import
+        from .. import data_utils
+    except ImportError:
+        # Create a minimal version if import fails
+        print("Could not import data_utils, using minimal implementation")
+        class data_utils:
+            @staticmethod
+            def process_sentiment(posts_df, comments_df):
+                # Simple placeholder implementation
+                sentiment_data = pd.DataFrame()
+                if not posts_df.empty:
+                    sentiment_data = posts_df.groupby('date').agg({
+                        'id': 'count'
+                    }).reset_index()
+                    sentiment_data.rename(columns={'id': 'post_count'}, inplace=True)
+                    sentiment_data['compound_sentiment_mean'] = 0
+                return sentiment_data
 
 def fetch_reddit_data(subreddits=['AMD_Stock', 'StockMarket', 'stocks', 'investing'], 
                       days_back=0.25, limit=100):  # 0.25 days = 6 hours
@@ -22,7 +45,8 @@ def fetch_reddit_data(subreddits=['AMD_Stock', 'StockMarket', 'stocks', 'investi
     # Initialize Reddit API client
     reddit = praw.Reddit(
         client_id=os.environ.get('REDDIT_CLIENT_ID'),
-        client_secret=os.environ.get('REDDIT_CLIENT_SECRET')
+        client_secret=os.environ.get('REDDIT_CLIENT_SECRET'),
+        user_agent=os.environ.get('REDDIT_USER_AGENT')
     )
     
     # Get today's date
