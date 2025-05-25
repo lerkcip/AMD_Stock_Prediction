@@ -2,74 +2,79 @@
 
 1. Feature Importance
 ------------------------------
-16. selftext_compound_median: 0.1016
-32. selftext_compound_std: 0.0815
-11. post_score_log: 0.0784
-13. ma20: 0.0518
-6. comment_count: 0.0518
-7. body_compound_mean: 0.0471
-24. post_upvote_ratio_mean: 0.0426
-8. post_count: 0.0385
-29. post_upvote_ratio_median: 0.0348
-15. comment_score_median: 0.0313
+6. selftext_compound_std: 0.0636
+19. post_score_log: 0.0628
+15. comment_count: 0.0521
+35. selftext_compound_median: 0.0519
+27. post_score_sum: 0.0466
+31. comment_score_median: 0.0420
+34. selftext_compound_mean: 0.0419
+16. post_upvote_ratio_mean: 0.0407
+1. ma20: 0.0394
+30. post_count: 0.0375
 
 2. Model Performance
 ------------------------------
 RandomForest:
-  Accuracy: 0.9398
-  Balanced Accuracy: 0.8408
-  Macro F1: 0.8833
+  Accuracy: 0.9036
+  Balanced Accuracy: 0.8149
+  Macro F1: 0.8579
 
 XGBoost:
   Accuracy: 0.9639
-  Balanced Accuracy: 0.8583
-  Macro F1: 0.9000
+  Balanced Accuracy: 0.9158
+  Macro F1: 0.9419
 
 
 3. Optimal Feature Sets
 ------------------------------
-Optimal RandomForest features (20):
-  1. selftext_compound_median
-  2. selftext_compound_std
-  3. post_score_log
-  4. ma20
-  5. comment_count
-  6. body_compound_mean
-  7. post_upvote_ratio_mean
-  8. post_count
-  9. post_upvote_ratio_median
-  10. comment_score_median
-  11. comment_score_log
-  12. post_comments_mean
-  13. ma5
-  14. title_compound_median
-  15. selftext_compound_mean
+Optimal RandomForest features (23):
+  1. selftext_compound_std
+  2. post_score_log
+  3. comment_count
+  4. selftext_compound_median
+  5. post_score_sum
+  6. comment_score_median
+  7. selftext_compound_mean
+  8. post_upvote_ratio_mean
+  9. ma20
+  10. post_count
+  11. post_upvote_ratio_median
+  12. title_compound_median
+  13. body_compound_mean
+  14. ma10
+  15. post_comments_sum
   16. post_comments_median
-  17. ma10
-  18. engagement_ratio
-  19. post_score_std
-  20. post_comments_std
+  17. post_comments_std
+  18. post_comments_mean
+  19. comment_score_log
+  20. body_compound_median
+  21. engagement_ratio
+  22. compound_sentiment_count
+  23. post_score_std
 
-Optimal XGBoost features (22):
-  1. selftext_compound_median
-  2. selftext_compound_std
-  3. post_score_log
-  4. ma20
-  5. comment_count
-  6. body_compound_mean
-  7. post_upvote_ratio_mean
-  8. post_count
-  9. post_upvote_ratio_median
-  10. comment_score_median
-  11. comment_score_log
-  12. post_comments_mean
-  13. ma5
-  14. title_compound_median
-  15. selftext_compound_mean
+Optimal XGBoost features (24):
+  1. selftext_compound_std
+  2. post_score_log
+  3. comment_count
+  4. selftext_compound_median
+  5. post_score_sum
+  6. comment_score_median
+  7. selftext_compound_mean
+  8. post_upvote_ratio_mean
+  9. ma20
+  10. post_count
+  11. post_upvote_ratio_median
+  12. title_compound_median
+  13. body_compound_mean
+  14. ma10
+  15. post_comments_sum
   16. post_comments_median
-  17. ma10
-  18. engagement_ratio
-  19. post_score_std
-  20. post_comments_std
-  21. post_score_median
-  22. title_compound_mean
+  17. post_comments_std
+  18. post_comments_mean
+  19. comment_score_log
+  20. body_compound_median
+  21. engagement_ratio
+  22. compound_sentiment_count
+  23. post_score_std
+  24. compound_sentiment_std
