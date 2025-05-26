@@ -67,5 +67,5 @@ yarn-error.log*
 Thumbs.db
 
 # Unrelated files
-# *.ipynb
+*.ipynb
 *.pdf
