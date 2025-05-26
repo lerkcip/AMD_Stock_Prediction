@@ -1,84 +1,87 @@
 === Reddit Sentiment Analysis Model Summary ===
 
-1. Feature Importance
+MODEL IMPROVEMENTS:
 ------------------------------
-5. post_score_log: 0.0669
-28. selftext_compound_std: 0.0625
-8. selftext_compound_median: 0.0618
-32. ma20: 0.0454
-18. body_compound_mean: 0.0429
-19. selftext_compound_mean: 0.0425
-22. comment_score_median: 0.0422
-17. post_score_sum: 0.0402
-29. post_upvote_ratio_median: 0.0396
-7. title_compound_median: 0.0395
+1. Implemented temporal train-test split to preserve chronological order
+2. Removed potential leakage features (daily_return, ma_crossover)
+3. Used class weights instead of SMOTE to handle imbalance
+4. Implemented FinBERT for improved financial sentiment analysis
 
-2. Model Performance
+DATA LIMITATIONS:
+------------------------------
+1. Limited aligned trading-day records (~414) from ~3 years of sentiment data
+2. High missingness rates in several sentiment aggregates
+3. Potential residual leakage in high-correlation features
+
+FEATURE IMPORTANCE:
+------------------------------
+40. ma20: 0.0848
+29. comment_score_sum: 0.0518
+41. prev_return: 0.0498
+10. selftext_compound_std: 0.0479
+37. Volume_AMD: 0.0464
+17. post_score_sum: 0.0412
+26. comment_count: 0.0399
+34. High_AMD: 0.0336
+30. comment_score_std: 0.0332
+33. Close_AMD: 0.0303
+
+MODEL PERFORMANCE:
 ------------------------------
 RandomForest:
-  Accuracy: 0.9157
-  Balanced Accuracy: 0.8241
-  Macro F1: 0.8662
+  Accuracy: 0.6494
+  Balanced Accuracy: 0.6167
+  Macro F1: 0.5761
 
 XGBoost:
-  Accuracy: 0.9759
-  Balanced Accuracy: 0.8667
-  Macro F1: 0.9085
+  Accuracy: 0.7143
+  Balanced Accuracy: 0.6857
+  Macro F1: 0.6671
 
 
-3. Optimal Feature Sets
+OPTIMAL FEATURE SETS:
 ------------------------------
-Optimal RandomForest features (23):
-  1. post_score_log
-  2. selftext_compound_std
-  3. selftext_compound_median
-  4. ma20
-  5. body_compound_mean
-  6. selftext_compound_mean
-  7. comment_score_median
-  8. post_score_sum
-  9. post_upvote_ratio_median
-  10. title_compound_median
-  11. post_count
-  12. post_upvote_ratio_mean
-  13. comment_count
-  14. body_compound_median
-  15. post_comments_mean
-  16. post_comments_median
-  17. ma10
-  18. post_comments_std
-  19. post_comments_sum
-  20. title_compound_mean
-  21. ma5
-  22. engagement_ratio
-  23. comment_score_log
+Optimal RandomForest features (11):
+  1. ma20
+  2. comment_score_sum
+  3. prev_return
+  4. selftext_compound_std
+  5. Volume_AMD
+  6. post_score_sum
+  7. comment_count
+  8. High_AMD
+  9. comment_score_std
+  10. Close_AMD
+  11. selftext_compound_mean
 
-Optimal XGBoost features (28):
-  1. post_score_log
-  2. selftext_compound_std
-  3. selftext_compound_median
-  4. ma20
-  5. body_compound_mean
-  6. selftext_compound_mean
-  7. comment_score_median
-  8. post_score_sum
-  9. post_upvote_ratio_median
-  10. title_compound_median
-  11. post_count
-  12. post_upvote_ratio_mean
-  13. comment_count
-  14. body_compound_median
-  15. post_comments_mean
-  16. post_comments_median
-  17. ma10
-  18. post_comments_std
-  19. post_comments_sum
-  20. title_compound_mean
-  21. ma5
-  22. engagement_ratio
-  23. comment_score_log
-  24. compound_sentiment_count
-  25. post_score_std
-  26. compound_sentiment_std
-  27. comment_score_sum
-  28. post_score_median
+Optimal XGBoost features (23):
+  1. ma20
+  2. comment_score_sum
+  3. prev_return
+  4. selftext_compound_std
+  5. Volume_AMD
+  6. post_score_sum
+  7. comment_count
+  8. High_AMD
+  9. comment_score_std
+  10. Close_AMD
+  11. selftext_compound_mean
+  12. post_upvote_ratio_median
+  13. post_count
+  14. post_upvote_ratio_mean
+  15. post_score_std
+  16. compound_sentiment_std
+  17. comment_score_median
+  18. Low_AMD
+  19. ma5
+  20. post_score_median
+  21. post_comments_std
+  22. comment_score_log
+  23. post_comments_median
+
+RECOMMENDATIONS FOR FUTURE WORK:
+------------------------------
+1. Scale the dataset – ingest more sub-reddits and broaden date range
+2. Implement strict walk-forward evaluation with expanding windows
+3. Implement economic back-testing to measure risk-adjusted returns
+4. Conduct ongoing leakage audits and feature pruning

@@ -18,3 +18,4 @@ praw>=7.7.1
 python-dotenv>=1.0.0
 xgboost>=1.5.0
 plotly>=5.5.0
+transformers==4.52.3
