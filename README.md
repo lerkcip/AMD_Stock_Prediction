@@ -35,4 +35,7 @@ This dashboard is deployed on Streamlit Cloud and automatically updates daily wi
 - `app.py`: Main Streamlit application
 - `data/`: Contains datasets and model artifacts
 - `scripts/`: Contains data update scripts
+- `docs/`: Contains project documentation and white papers
+- `notebooks/`: Contains Jupyter notebooks with analysis code
+- `images/`: Contains visualization images used in reports
 - `.github/workflows/`: Contains GitHub Actions workflow for daily updates (not currently working)
